@@ -21,6 +21,23 @@ st.text(img_gray.shape)
 
 img_gray = np.mean(imagem_color_arr, axis=2)
 
+def qtdeCores(n):
+    aux = 255 / n
+    x = aux
+    y = 0
+
+    for i in range(n):
+        if i == 0:
+            img_gray[img_gray < x] = 0
+            y = x
+            x += aux
+        elif i == (n - 1):
+            img_gray[img_gray > y]  = y
+        else:
+            img_gray[(y < img_gray) & (img_gray < x)]  = y
+            y = x
+            x += aux
+
 num_color = st.selectbox("Quantas cores?", \
     (2, 4, 8, 16, 32, 64, 128))
 
@@ -30,20 +47,17 @@ if num_color == 2:
     img_gray[img_gray < 127]  = 0
     img_gray[img_gray >= 127]  = 255
 elif num_color == 4:
-    img_gray[img_gray < 64]  = 0
-    img_gray[(64 < img_gray) & (img_gray < 128)]  = 64
-    img_gray[(128 < img_gray) & (img_gray < 192)]  = 128
-    img_gray[img_gray > 192]  = 192
-else:
-    img_gray[img_gray < 32]  = 0
-    img_gray[(32 < img_gray) & (img_gray < 64)]  = 32
-    img_gray[(64 < img_gray) & (img_gray < 96)]  = 64
-    img_gray[(96 < img_gray) & (img_gray < 128)]  = 128
-    img_gray[(128 < img_gray) & (img_gray < 160)]  = 160
-    img_gray[(160 < img_gray) & (img_gray < 192)]  = 192
-    img_gray[(192 < img_gray) & (img_gray < 224)]  = 224
-    img_gray[img_gray > 224]  = 255
-
+    qtdeCores(4)
+elif num_color == 8:
+    qtdeCores(8)
+elif num_color == 16:
+    qtdeCores(16)
+elif num_color == 32:
+    qtdeCores(32)
+elif num_color == 64:
+    qtdeCores(64)
+elif num_color == 128:
+    qtdeCores(128)
 
 new_image = Image.fromarray(img_gray)
 
